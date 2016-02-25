@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var chalk = require('chalk');
+var Discovery = require('dns-discovery');
 var SocketIOClient = require('socket.io-client');
 var Vorpal = require('vorpal');
 
@@ -8,19 +9,29 @@ var leaveRoom = require('./leave-room');
 var register = require('./register');
 var sendMessage = require('./send-message');
 
-var socket = SocketIOClient('http://localhost:9002');
-var vorpal = Vorpal();
-var context = {
-  socket: socket,
-  username: null,
-  room: null,
-  log: vorpal.log.bind(vorpal)
-};
+var discovery = Discovery();
 
-socket.once('connect', handleConnection);
+discovery.once('peer', function(name, peer) {
+  startClient('http://' + peer.host + ':' + peer.port);
+});
 
-function handleConnection() {
-  console.log('Welcome!');
+discovery.lookup('noisy-server');
+
+function startClient(serverUrl) {
+  var socket = SocketIOClient(serverUrl);
+  var vorpal = Vorpal();
+  var context = {
+    socket: socket,
+    username: null,
+    room: null,
+    log: vorpal.log.bind(vorpal)
+  };
+
+  socket.once('connect', handleConnection.bind(null, vorpal, context));
+}
+
+function handleConnection(vorpal, context) {
+  console.log('Welcome to noisy');
 
   context.socket.on('message', logMessage(context));
   context.socket.on('user-joined', logJoiningUser(context));

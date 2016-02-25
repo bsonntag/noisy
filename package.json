@@ -1,7 +1,7 @@
 {
-  "name": "sockets",
+  "name": "noisy",
   "version": "1.0.0",
-  "description": "",
+  "description": "Command line chat, with Socket.IO and Vorpal",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^1.1.1",
+    "dns-discovery": "^3.7.1",
     "lodash": "^4.5.1",
     "socket.io": "^1.4.5",
     "socket.io-client": "^1.4.5",
