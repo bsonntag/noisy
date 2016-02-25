@@ -7,6 +7,7 @@ function handleJoinRoom(context, args, callback) {
   }
   else if(context.room) {
     context.log('# You are already in a room');
+    callback();
   }
   else {
     context.socket.once('join-response', onJoined(context, callback));
