@@ -4,6 +4,8 @@ var Discovery = require('dns-discovery');
 var SocketIOClient = require('socket.io-client');
 var Vorpal = require('vorpal');
 
+var exit = require('./exit');
+var help = require('./help');
 var joinRoom = require('./join-room');
 var leaveRoom = require('./leave-room');
 var register = require('./register');
@@ -36,6 +38,22 @@ function handleConnection(vorpal, context) {
   context.socket.on('message', logMessage(context));
   context.socket.on('user-joined', logJoiningUser(context));
   context.socket.on('user-left', logLeavingUser(context));
+
+  vorpal.find('help')
+    .remove();
+
+  vorpal.find('exit')
+    .remove();
+
+  vorpal.command('\\help [command...]')
+    .description('Provides help for a given command.')
+    .alias('\\h')
+    .action(help);
+
+  vorpal.command('\\exit')
+    .description('Exits the application.')
+    .alias('\\quit', '\\e', '\\q')
+    .action(exit);
 
   vorpal.command('\\register <username>')
     .description('Registers with a username')
