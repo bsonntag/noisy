@@ -10,6 +10,7 @@ var joinRoom = require('./join-room');
 var leaveRoom = require('./leave-room');
 var register = require('./register');
 var sendMessage = require('./send-message');
+var who = require('./who');
 
 var discovery = Discovery();
 
@@ -56,22 +57,26 @@ function handleConnection(vorpal, context) {
     .action(exit);
 
   vorpal.command('\\register <username>')
-    .description('Registers with a username')
+    .description('Registers with a username.')
     .alias('\\r')
     .action(register(context));
 
   vorpal.command('\\join <room>')
-    .description('Joins a room')
+    .description('Joins a room.')
     .alias('\\j')
     .action(joinRoom(context));
 
   vorpal.command('\\leave')
-    .description('Leaves the current room')
+    .description('Leaves the current room.')
     .alias('\\l')
     .action(leaveRoom(context));
 
+  vorpal.command('\\who')
+    .description('Lists online users.')
+    .action(who(context));
+
   vorpal.catch('[words...]')
-    .description('Sends a message')
+    .description('Sends a message to everyone in the room.')
     .action(sendMessage(context));
 
   vorpal.delimiter('> ')

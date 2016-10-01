@@ -1,6 +1,7 @@
 var _ = require('lodash');
 
 var handleJoinRoom = require('./join-room');
+var handleWho = require('./who');
 
 function handleRegister(users, socket, message) {
   if(!message || !message.username)
@@ -33,6 +34,7 @@ function registerUser(users, username, socket) {
 
 function setupSocket(users, username, socket) {
   socket.on('join-room', handleJoinRoom(username, socket));
+  socket.on('who', handleWho(users, username, socket));
 
   socket.on('disconnect', function() {
     _.pull(users, username);
